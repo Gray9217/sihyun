@@ -11,23 +11,20 @@ const KAKAO_USER_URL = "https://kapi.kakao.com/v2/user/me";
 const KAKAO_LOGOUT_URL = "https://kauth.kakao.com/oauth/logout";
 
 function getConfig() {
-    const config = {
-        clientId: process.env.KAKAO_REST_API_KEY,
-        redirectUri: process.env.KAKAO_REDIRECT_URI,
-        frontendUrl: process.env.FRONTEND_URL,
-        logoutRedirectUri:
-            process.env.KAKAO_LOGOUT_REDIRECT_URI || process.env.FRONTEND_URL,
-    };
+  const config = {
+    clientId: process.env.KAKAO_REST_API_KEY,
+    redirectUri: process.env.KAKAO_REDIRECT_URI,
+    frontendUrl: process.env.FRONTEND_URL,
+    logoutRedirectUri: process.env.KAKAO_LOGOUT_REDIRECT_URI || process.env.FRONTEND_URL,
+  }
 
-    // 필수 환경 변수가 있는지 확인하는 로직 (디버깅에 매우 좋습니다)
-    if (!config.clientId || !config.redirectUri || !config.frontendUrl) {
-        console.error("환경 변수 설정 에러:", config);
-        throw new Error(
-            "필수 환경 변수(KAKAO_REST_API_KEY, KAKAO_REDIRECT_URI, FRONTEND_URL)가 누락되었습니다."
-        );
-    }
-
-    return config;
+  // 핵심: 환경 변수가 없으면 아예 에러를 뿜게 만드세요. 
+  // 그래야 Vercel 로그에 "뭐가 없는지" 정확히 찍힙니다.
+  if (!config.clientId || !config.redirectUri || !config.frontendUrl) {
+    throw new Error('필수 환경 변수 누락! KAKAO_REST_API_KEY, KAKAO_REDIRECT_URI, FRONTEND_URL을 Vercel에 등록하세요.');
+  }
+  
+  return config
 }
 
 function redirectWithError(res, frontendUrl, message) {

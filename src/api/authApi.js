@@ -1,12 +1,21 @@
-// 환경 변수가 아예 안 읽힐 때를 대비한 안전 장치 추가
-const getApiUrl = () => {
-  // 1. 빌드 타임 환경 변수
-  if (import.meta.env && import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-  // 2. 환경 변수가 없으면 무조건 실제 서버 주소 반환
-  return "https://sihyun.vercel.app"; 
-};
+// src/api/authApi.js
 
-const API_URL = getApiUrl();
-// 이제 axios 호출 시 무조건 API_URL을 사용하세요
+export function getApiBase() {
+  // 1. 배포용 서버 주소를 여기에 직접 고정합니다.
+  const PRODUCTION_URL = "https://sihyun.vercel.app";
+
+  // 2. 환경변수가 로드되지 않았을 경우를 대비한 안전 장치
+  const envUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL)
+                  ? import.meta.env.VITE_API_URL 
+                  : PRODUCTION_URL;
+  
+  return envUrl.replace(/\/$/, "");
+}
+
+export function getKakaoLoginUrl() {
+  return `${getApiBase()}/auth/kakao`;
+}
+
+export function getKakaoLogoutUrl() {
+  return `${getApiBase()}/auth/kakao/logout`;
+}

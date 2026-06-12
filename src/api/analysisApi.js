@@ -1,7 +1,9 @@
 import axios from "axios";
 import { getCurrentUserId } from "./communityApi.js";
+import { getApiBase } from "./authApi.js"; // authApi에서 함수 가져오기
 
-const API_URL = import.meta.env.VITE_API_URL || "";
+// 환경 변수 직접 참조 대신 getApiBase() 함수 사용
+const API_URL = getApiBase(); 
 
 export const analyzeRelationship = async (analysisData) => {
     try {

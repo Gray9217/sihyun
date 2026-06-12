@@ -1,34 +1,36 @@
-import axios from 'axios'
-import { getCurrentUserId } from './communityApi.js'
+import axios from "axios";
+import { getCurrentUserId } from "./communityApi.js";
 
-const API_URL = import.meta.env.VITE_API_URL || ''
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 export const analyzeRelationship = async (analysisData) => {
-  try {
-    const payload = { ...analysisData, userId: getCurrentUserId() }
-    const response = await axios.post(`${API_URL}/api/analyze`, payload, {
-      headers: { 'Content-Type': 'application/json' },
-      timeout: 60000
-    })
-    return response.data
-  } catch (error) {
-    throw error
-  }
-}
+    try {
+        const payload = { ...analysisData, userId: getCurrentUserId() };
+        const response = await axios.post(`${API_URL}/api/analyze`, payload, {
+            headers: { "Content-Type": "application/json" },
+            timeout: 60000,
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const fetchAnalysisHistory = async (userId) => {
-  const id = userId || getCurrentUserId()
-  if (!id) return []
-  const response = await axios.get(`${API_URL}/api/analysis/history/${id}`)
-  return response.data.records || []
-}
+    const id = userId || getCurrentUserId();
+    if (!id) return [];
+    const response = await axios.get(`${API_URL}/api/analysis/history/${id}`);
+    return response.data.records || [];
+};
 
 export const toggleAnalysisFavorite = async (id) => {
-  const response = await axios.patch(`${API_URL}/api/analysis/${id}/favorite`)
-  return response.data
-}
+    const response = await axios.patch(
+        `${API_URL}/api/analysis/${id}/favorite`
+    );
+    return response.data;
+};
 
 export const deleteAnalysisRecord = async (id) => {
-  const response = await axios.delete(`${API_URL}/api/analysis/${id}`)
-  return response.data
-}
+    const response = await axios.delete(`${API_URL}/api/analysis/${id}`);
+    return response.data;
+};
